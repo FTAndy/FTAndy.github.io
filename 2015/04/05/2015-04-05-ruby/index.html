@@ -259,8 +259,9 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <h3 id="《Ruby元编程》-之后"><a href="#《Ruby元编程》-之后" class="headerlink" title="《Ruby元编程》 之后"></a>《Ruby元编程》 之后</h3><p><a href="http://book.douban.com/subject/7056800/" target="_blank" rel="external">《Ruby元编程》</a><br>这本书用两个字总结：法术。用一个句话总结：根本没有什么元编程，只有编程而已。  </p>
-<a id="more"></a>
+            <h3 id="《Ruby元编程》-之后"><a href="#《Ruby元编程》-之后" class="headerlink" title="《Ruby元编程》 之后"></a>《Ruby元编程》 之后</h3><p><a target="_blank" rel="noopener" href="http://book.douban.com/subject/7056800/">《Ruby元编程》</a><br>这本书用两个字总结：法术。用一个句话总结：根本没有什么元编程，只有编程而已。  </p>
+<span id="more"></span>
+
 <h3 id="对于-Ruby-来说"><a href="#对于-Ruby-来说" class="headerlink" title="对于 Ruby 来说"></a>对于 Ruby 来说</h3><p>我接触到 Ruby 这个语言源于 Rails，但我不希望自己学习 Ruby 只是终于 Rails，终于 Web。<br>所以我想要熟悉 Ruby，精通 Ruby，想要知道他是什么，他能干些什么，为什么 Rails 能用 Ruby 写出来。</p>
 <h3 id="Ruby的元"><a href="#Ruby的元" class="headerlink" title="Ruby的元"></a>Ruby的元</h3><p>我对元的理解是，事物对自己的抽象。一个编程语言想要应用到现实世界中，非常需要中间层来一层层地将想要描述的事物抽象出来。<br>Ruby 的语言设计和元能力有两个优点。  </p>
 <ul>
@@ -299,31 +300,156 @@
 <li><p>Shared Scope 共享作用域</p>
 </li>
 </ul>
-<h4 id="Around-Alias-环绕别名"><a href="#Around-Alias-环绕别名" class="headerlink" title="Around Alias 环绕别名"></a>Around Alias 环绕别名</h4><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">String</span></span></div><div class="line">    <span class="keyword">alias</span> old_reverse reverse</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">reverse</span></span></div><div class="line">        <span class="string">"x<span class="subst">#&#123;old_reverse&#125;</span>x"</span></div><div class="line">    <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line"><span class="string">"abc"</span>.reverse <span class="comment"># =&gt; "xcbax"</span></div><div class="line"><span class="string">"abc"</span>.old_reverse <span class="comment"># =&gt; "cba"</span></div></pre></td></tr></table></figure>
+<h4 id="Around-Alias-环绕别名"><a href="#Around-Alias-环绕别名" class="headerlink" title="Around Alias 环绕别名"></a>Around Alias 环绕别名</h4><pre><code>class String
+    alias old_reverse reverse
+    def reverse
+        &quot;x#{old_reverse}x&quot;
+    end
+end
+&quot;abc&quot;.reverse # &#x3D;&gt; &quot;xcbax&quot;
+&quot;abc&quot;.old_reverse # &#x3D;&gt; &quot;cba&quot;</code></pre>
 <p>old_reverse 和 reverse互 用，但是重新定义 reverse，old_reverse 指向原来的 reverse。</p>
-<h4 id="Blank-Slate-白板"><a href="#Blank-Slate-白板" class="headerlink" title="Blank Slate 白板"></a>Blank Slate 白板</h4><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span></span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">method_missing</span><span class="params">(name, *args)</span></span></div><div class="line">        <span class="string">"a Ghost Method"</span></div><div class="line">    <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line">obj = C.new</div><div class="line">obj.to_s <span class="comment"># =&gt; "#&lt;C:XXXX&gt;"</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span></span></div><div class="line">    instance_methods.each <span class="keyword">do</span> <span class="params">|m|</span></div><div class="line">        undef_method(m) <span class="keyword">unless</span> m.to_s =~ <span class="regexp">/method_missing|resopnd_to?/</span></div><div class="line">    <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line">obj.to_s <span class="comment"># =&gt; "a Ghost Method"</span></div></pre></td></tr></table></figure>
+<h4 id="Blank-Slate-白板"><a href="#Blank-Slate-白板" class="headerlink" title="Blank Slate 白板"></a>Blank Slate 白板</h4><pre><code>class C
+    def method_missing(name, *args)
+        &quot;a Ghost Method&quot;
+    end
+end
+obj &#x3D; C.new
+obj.to_s # &#x3D;&gt; &quot;#&lt;C:XXXX&gt;&quot;
+class C
+    instance_methods.each do |m|
+        undef_method(m) unless m.to_s &#x3D;~ &#x2F;method_missing|resopnd_to?&#x2F;
+    end
+end
+obj.to_s # &#x3D;&gt; &quot;a Ghost Method&quot;</code></pre>
 <p>书里面有个 BUG，用来匹配的正则是“/method_missing|resopnd_to?|^/”，这样把所有方法都匹配到了。<br>而且 Ruby 这里比较有意思的是“=~”匹配的时候，真返回0，假返回 nil。Ruby 里面的判断有值就为真，而 C 和 C++ 都会将0设为 false，1设为 true。<br>定义了一个类的 method_missing 方法时候，对象调用了一个不知名方法，就会直接调用 method_missing。method_missing 也是很多 Ruby 魔法的根源。</p>
-<h4 id="Class-Extyension-类扩展"><a href="#Class-Extyension-类扩展" class="headerlink" title="Class Extyension 类扩展"></a>Class Extyension 类扩展</h4><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> ;</span> <span class="keyword">end</span></div><div class="line"><span class="class"><span class="keyword">module</span> <span class="title">M</span></span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">my_method</span></span></div><div class="line">        <span class="string">"a class method"</span></div><div class="line">    <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line"><span class="class"><span class="keyword">class</span> &lt;&lt; C</span></div><div class="line">    <span class="keyword">include</span> M</div><div class="line"><span class="keyword">end</span></div><div class="line">C.my_method <span class="comment"># =&gt; "a class method"</span></div><div class="line">a = C.new</div><div class="line">a.my_method <span class="comment"># =&gt; "NoMethodError: undefined method `my_method' for #&lt;C:0x000000029d5c68&gt;"</span></div></pre></td></tr></table></figure>
+<h4 id="Class-Extyension-类扩展"><a href="#Class-Extyension-类扩展" class="headerlink" title="Class Extyension 类扩展"></a>Class Extyension 类扩展</h4><pre><code>class C ; end
+module M
+    def my_method
+        &quot;a class method&quot;
+    end
+end
+class &lt;&lt; C
+    include M
+end
+C.my_method # &#x3D;&gt; &quot;a class method&quot;
+a &#x3D; C.new
+a.my_method # &#x3D;&gt; &quot;NoMethodError: undefined method &#96;my_method&#39; for #&lt;C:0x000000029d5c68&gt;&quot;</code></pre>
 <p>这里对类进行方法扩展，但是对于创建类的对象是没有这个方法的。</p>
-<h4 id="Class-Extension-类扩展混入"><a href="#Class-Extension-类扩展混入" class="headerlink" title="Class Extension 类扩展混入"></a>Class Extension 类扩展混入</h4><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">module</span> <span class="title">M</span></span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">self</span>.<span class="title">included</span><span class="params">(base)</span></span></div><div class="line">        base.extend(ClassMethods)</div><div class="line">    <span class="keyword">end</span></div><div class="line"></div><div class="line">    <span class="class"><span class="keyword">module</span> <span class="title">ClassMethods</span></span></div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">my_method</span></span></div><div class="line">            <span class="string">"a class method"</span></div><div class="line">        <span class="keyword">end</span></div><div class="line">    <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span></span></div><div class="line">    <span class="keyword">include</span> M</div><div class="line"><span class="keyword">end</span></div><div class="line">C.my_method <span class="comment"># =&gt; "a class method"</span></div></pre></td></tr></table></figure>
+<h4 id="Class-Extension-类扩展混入"><a href="#Class-Extension-类扩展混入" class="headerlink" title="Class Extension 类扩展混入"></a>Class Extension 类扩展混入</h4><pre><code>module M
+    def self.included(base)
+        base.extend(ClassMethods)
+    end
+
+    module ClassMethods
+        def my_method
+            &quot;a class method&quot;
+        end
+    end
+end
+
+class C
+    include M
+end
+C.my_method # &#x3D;&gt; &quot;a class method&quot;</code></pre>
 <p>这里的 self.included(base) 使用了类的钩子功能，Ruby 还有其他的钩子方法。<br>当类C include M的时候，触发了模块M的钩子方法 included，所以 base 就是C，然后C再扩展了M模块的 ClassMethods 的所有方法。</p>
-<h4 id="Context-Probe-上下文探针"><a href="#Context-Probe-上下文探针" class="headerlink" title="Context Probe 上下文探针"></a>Context Probe 上下文探针</h4><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span></span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">initialize</span></span></div><div class="line">        @x = <span class="string">"some thing"</span></div><div class="line">    <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line">obj = C.new</div><div class="line">obj.instance_eval&#123;@x&#125;</div></pre></td></tr></table></figure>
+<h4 id="Context-Probe-上下文探针"><a href="#Context-Probe-上下文探针" class="headerlink" title="Context Probe 上下文探针"></a>Context Probe 上下文探针</h4><pre><code>class C
+    def initialize
+        @x &#x3D; &quot;some thing&quot;
+    end
+end
+obj &#x3D; C.new
+obj.instance_eval{@x}</code></pre>
 <p>instance_eval 可以打开对象自己，操作自己内部。</p>
-<h4 id="Dynamic-Method-动态方法"><a href="#Dynamic-Method-动态方法" class="headerlink" title="Dynamic Method 动态方法"></a>Dynamic Method 动态方法</h4><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> ;</span> <span class="keyword">end</span></div><div class="line">C.class_eval <span class="keyword">do</span></div><div class="line">    define_method <span class="symbol">:my_method</span> <span class="keyword">do</span> </div><div class="line">        <span class="string">"a dynamic method"</span></div><div class="line">    <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line">obj = C.new</div><div class="line">obj.my_method <span class="comment"># =&gt; "a dynamic method"</span></div></pre></td></tr></table></figure>
+<h4 id="Dynamic-Method-动态方法"><a href="#Dynamic-Method-动态方法" class="headerlink" title="Dynamic Method 动态方法"></a>Dynamic Method 动态方法</h4><pre><code>class C ; end
+C.class_eval do
+    define_method :my_method do 
+        &quot;a dynamic method&quot;
+    end
+end
+obj &#x3D; C.new
+obj.my_method # &#x3D;&gt; &quot;a dynamic method&quot;</code></pre>
 <p>class_eval 可以打开一个类，对类进行操作。</p>
-<h4 id="Deferred-Evaluation-延迟执行"><a href="#Deferred-Evaluation-延迟执行" class="headerlink" title="Deferred Evaluation 延迟执行"></a>Deferred Evaluation 延迟执行</h4><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span></span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">store</span><span class="params">(&amp;block)</span></span></div><div class="line">        @my_code_capsule = block</div><div class="line">    <span class="keyword">end</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">execute</span></span></div><div class="line">        @my_code_capsule.call</div><div class="line">    <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line">obj = C.new</div><div class="line">obj.store&#123;$X = <span class="number">1</span>&#125;</div><div class="line">$X = <span class="number">0</span></div><div class="line">obj.execute</div><div class="line">$X <span class="comment"># =&gt; 1</span></div></pre></td></tr></table></figure>
+<h4 id="Deferred-Evaluation-延迟执行"><a href="#Deferred-Evaluation-延迟执行" class="headerlink" title="Deferred Evaluation 延迟执行"></a>Deferred Evaluation 延迟执行</h4><pre><code>class C
+    def store(&amp;block)
+        @my_code_capsule &#x3D; block
+    end
+    def execute
+        @my_code_capsule.call
+    end
+end
+obj &#x3D; C.new
+obj.store{$X &#x3D; 1}
+$X &#x3D; 0
+obj.execute
+$X # &#x3D;&gt; 1</code></pre>
 <p>可以动态地将一个块存到对象的一个变量中。</p>
-<h4 id="Dynamic-Proxy-动态代理"><a href="#Dynamic-Proxy-动态代理" class="headerlink" title="Dynamic Proxy 动态代理"></a>Dynamic Proxy 动态代理</h4><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyDynamicProxy</span></span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">initialize</span><span class="params">(target)</span></span></div><div class="line">        @target = target</div><div class="line">    <span class="keyword">end</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">method_missing</span><span class="params">(name, *args, &amp;block)</span></span></div><div class="line">        <span class="string">"result: <span class="subst">#&#123;@target.send(name, *args, &amp;block)&#125;</span>"</span></div><div class="line">    <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line">obj = MyDynamicProxy.new(<span class="string">"a String"</span>)</div><div class="line">obj.reverse <span class="comment"># =&gt; "result: gnirtS a"</span></div></pre></td></tr></table></figure>
+<h4 id="Dynamic-Proxy-动态代理"><a href="#Dynamic-Proxy-动态代理" class="headerlink" title="Dynamic Proxy 动态代理"></a>Dynamic Proxy 动态代理</h4><pre><code>class MyDynamicProxy
+    def initialize(target)
+        @target &#x3D; target
+    end
+    def method_missing(name, *args, &amp;block)
+        &quot;result: #{@target.send(name, *args, &amp;block)}&quot;
+    end
+end
+
+obj &#x3D; MyDynamicProxy.new(&quot;a String&quot;)
+obj.reverse # &#x3D;&gt; &quot;result: gnirtS a&quot;</code></pre>
 <p>使用到了 method_missing 和 send。Duang。另外一个魔法诞生了。</p>
-<h4 id="Flat-Scpoe-扁平作用域"><a href="#Flat-Scpoe-扁平作用域" class="headerlink" title="Flat Scpoe 扁平作用域"></a>Flat Scpoe 扁平作用域</h4><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span></span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">an_attribute</span></span></div><div class="line">        @attr</div><div class="line">    <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line">obj = C.new</div><div class="line">a_variable = <span class="number">100</span></div><div class="line"></div><div class="line">obj.instance_eval <span class="keyword">do</span></div><div class="line">    @attr = a_variable</div><div class="line"><span class="keyword">end</span></div><div class="line">obj.an_attribute <span class="comment"># =&gt;100</span></div></pre></td></tr></table></figure>
+<h4 id="Flat-Scpoe-扁平作用域"><a href="#Flat-Scpoe-扁平作用域" class="headerlink" title="Flat Scpoe 扁平作用域"></a>Flat Scpoe 扁平作用域</h4><pre><code>class C
+    def an_attribute
+        @attr
+    end
+end
+obj &#x3D; C.new
+a_variable &#x3D; 100
+
+obj.instance_eval do
+    @attr &#x3D; a_variable
+end
+obj.an_attribute # &#x3D;&gt;100</code></pre>
 <p>就是使用了 instance_eval 和闭包嘛。</p>
-<h4 id="Kernel-Method-内核方法"><a href="#Kernel-Method-内核方法" class="headerlink" title="Kernel Method 内核方法"></a>Kernel Method 内核方法</h4><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">module</span> <span class="title">Kernel</span></span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">a_method</span></span></div><div class="line">        <span class="string">"a kernel method"</span></div><div class="line">    <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line">a_method <span class="comment"># =&gt; "a kernel method"</span></div></pre></td></tr></table></figure>
+<h4 id="Kernel-Method-内核方法"><a href="#Kernel-Method-内核方法" class="headerlink" title="Kernel Method 内核方法"></a>Kernel Method 内核方法</h4><pre><code>module Kernel
+    def a_method
+        &quot;a kernel method&quot;
+    end
+end
+a_method # &#x3D;&gt; &quot;a kernel method&quot;</code></pre>
 <p>在 kernel 模块中定义方法，所有对象可见。</p>
-<h4 id="Monkeypatch-猴子补丁"><a href="#Monkeypatch-猴子补丁" class="headerlink" title="Monkeypatch 猴子补丁"></a>Monkeypatch 猴子补丁</h4><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">String</span></span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">reverse</span></span></div><div class="line">        <span class="string">"override"</span></div><div class="line">    <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line"><span class="string">"abc"</span>.reverse <span class="comment"># =&gt; "override"</span></div></pre></td></tr></table></figure>
+<h4 id="Monkeypatch-猴子补丁"><a href="#Monkeypatch-猴子补丁" class="headerlink" title="Monkeypatch 猴子补丁"></a>Monkeypatch 猴子补丁</h4><pre><code>class String
+    def reverse
+        &quot;override&quot;
+    end
+end
+&quot;abc&quot;.reverse # &#x3D;&gt; &quot;override&quot;</code></pre>
 <p>著名的猴子补丁，在 runtime 中改变类和对象的属性和方法。guerrilla patch 拟音  gorilla patch ，然后变成了 monkey patch。</p>
-<h4 id="Object-Extension-对象扩展"><a href="#Object-Extension-对象扩展" class="headerlink" title="Object Extension 对象扩展"></a>Object Extension 对象扩展</h4><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">obj = Object.new</div><div class="line"><span class="class"><span class="keyword">module</span> <span class="title">M</span></span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">my_method</span></span></div><div class="line">        <span class="string">"a singleton method"</span></div><div class="line">    <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div><div class="line"><span class="class"><span class="keyword">class</span> &lt;&lt; obj</span></div><div class="line">    <span class="keyword">include</span> M</div><div class="line"><span class="keyword">end</span></div><div class="line">obj.my_thod <span class="comment"># =&gt; "a singleton method"</span></div></pre></td></tr></table></figure>
+<h4 id="Object-Extension-对象扩展"><a href="#Object-Extension-对象扩展" class="headerlink" title="Object Extension 对象扩展"></a>Object Extension 对象扩展</h4><pre><code>obj &#x3D; Object.new
+module M
+    def my_method
+        &quot;a singleton method&quot;
+    end
+end
+class &lt;&lt; obj
+    include M
+end
+obj.my_thod # &#x3D;&gt; &quot;a singleton method&quot;</code></pre>
 <p>对 obj 的元类进行扩展，混入模块 M 的方法。</p>
-<h4 id="Shared-Scope-共享作用域"><a href="#Shared-Scope-共享作用域" class="headerlink" title="Shared Scope 共享作用域"></a>Shared Scope 共享作用域</h4><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">lambda &#123;</div><div class="line">    shared = <span class="number">10</span></div><div class="line">    <span class="keyword">self</span>.<span class="keyword">class</span> <span class="comment"># =&gt; Object</span></div><div class="line">    <span class="keyword">self</span>.<span class="keyword">class</span>.class_eval <span class="keyword">do</span></div><div class="line">        define_method <span class="symbol">:counter</span> <span class="keyword">do</span></div><div class="line">            shared</div><div class="line">        <span class="keyword">end</span></div><div class="line">        define_method <span class="symbol">:down</span> <span class="keyword">do</span></div><div class="line">            shared -= <span class="number">1</span></div><div class="line">        <span class="keyword">end</span></div><div class="line">    <span class="keyword">end</span></div><div class="line">&#125;.call</div><div class="line"></div><div class="line">counter <span class="comment"># =&gt; 10</span></div><div class="line"><span class="number">3</span>.times &#123;down&#125;</div><div class="line">counter <span class="comment"># =&gt; 7</span></div></pre></td></tr></table></figure>
+<h4 id="Shared-Scope-共享作用域"><a href="#Shared-Scope-共享作用域" class="headerlink" title="Shared Scope 共享作用域"></a>Shared Scope 共享作用域</h4><pre><code>lambda {
+    shared &#x3D; 10
+    self.class # &#x3D;&gt; Object
+    self.class.class_eval do
+        define_method :counter do
+            shared
+        end
+        define_method :down do
+            shared -&#x3D; 1
+        end
+    end
+}.call
+
+counter # &#x3D;&gt; 10
+3.times {down}
+counter # &#x3D;&gt; 7</code></pre>
 <p>lambda 对 Object 对象进行操作，并且共享变量。  </p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>其实这些东西熟悉了这些东西之后，还是那句话：根本没有什么元编程，只有编程而已。</p>
 
@@ -336,7 +462,7 @@
 
 </div>
 
-    <a data-url="http://ftandy.com/2015/04/05/2015-04-05-ruby/" data-id="clo1n69h20003oasnsplniasq" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://ftandy.com/2015/04/05/2015-04-05-ruby/" data-id="clo1nvt4z00079asna1use6rj" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding

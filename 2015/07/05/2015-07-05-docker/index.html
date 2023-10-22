@@ -259,41 +259,61 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <h3 id="Docker-与-Vagrant"><a href="#Docker-与-Vagrant" class="headerlink" title="Docker 与 Vagrant"></a>Docker 与 Vagrant</h3><p>Docker 和 Vagrant 是近期两个应用场景最像的计算机虚拟化技术了吧。Stackoverflow 上有一个<a href="http://stackoverflow.com/questions/16647069/should-i-use-vagrant-or-docker-io-for-creating-an-isolated-environment" target="_blank" rel="external">问题</a>是问在什么场景下应该用 Vagrant，什么场景<br>下应该使用 Docker，而 Vagrant 和 Docker 的作者也都出来争论了，有兴趣的可以去看看大牛是怎么撕逼的。  </p>
+            <h3 id="Docker-与-Vagrant"><a href="#Docker-与-Vagrant" class="headerlink" title="Docker 与 Vagrant"></a>Docker 与 Vagrant</h3><p>Docker 和 Vagrant 是近期两个应用场景最像的计算机虚拟化技术了吧。Stackoverflow 上有一个<a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/16647069/should-i-use-vagrant-or-docker-io-for-creating-an-isolated-environment">问题</a>是问在什么场景下应该用 Vagrant，什么场景<br>下应该使用 Docker，而 Vagrant 和 Docker 的作者也都出来争论了，有兴趣的可以去看看大牛是怎么撕逼的。  </p>
 <p>Docker 将 Git 版本管理的概念与 Linux 上 Container 的概念融合在一起，而 Vagrant 则是将 Git 版本管理的概念与虚拟机的概念融合在一起。  </p>
-<a id="more"></a>
+<span id="more"></span>
+
 <p><img src="/images/vagrant_docker/what-is-docker-diagram.png" alt="Docker 架构"></p>
 <p><img src="/images/vagrant_docker/what-is-vm-diagram.png" alt="Vagrant 架构"></p>
 <p>下面是我自己画的 Vagrant 架构，其实也是在虚拟机上抽象出一层类似于 Git 的管理工具。  </p>
 <p><img src="/images/vagrant_docker/vagrant.png" alt="Vagrant"></p>
-<h3 id="OS-X-下的-Docker"><a href="#OS-X-下的-Docker" class="headerlink" title="OS X 下的 Docker"></a>OS X 下的 Docker</h3><p>由于 Container 是 Linux 特有的概念，所以想要在 OS X 下玩 Docker，还是需要依赖虚拟机。官网上推荐的配套 Docker 虚拟机叫 boot2docker。可以到<a href="https://docs.docker.com/installation/mac/" target="_blank" rel="external">官网</a>上按照教程安装。你也可以使用 Vagrant，然后在 Vagrant 中的 Linux 虚拟机中配置安装 Docker，在虚拟机中玩 Docker。  </p>
+<h3 id="OS-X-下的-Docker"><a href="#OS-X-下的-Docker" class="headerlink" title="OS X 下的 Docker"></a>OS X 下的 Docker</h3><p>由于 Container 是 Linux 特有的概念，所以想要在 OS X 下玩 Docker，还是需要依赖虚拟机。官网上推荐的配套 Docker 虚拟机叫 boot2docker。可以到<a target="_blank" rel="noopener" href="https://docs.docker.com/installation/mac/">官网</a>上按照教程安装。你也可以使用 Vagrant，然后在 Vagrant 中的 Linux 虚拟机中配置安装 Docker，在虚拟机中玩 Docker。  </p>
 <p>用户在命令行或者 GUI 下与 Docker 交互主要通过与 Docker daemon 对话，Docker daemon 再管理每个 Container。所以在 OS X 上会出现这样的架构：<br><img src="/images/vagrant_docker/mac_docker_host.svg" alt="Image">  </p>
 <h3 id="OS-X-下的-Docker-的使用"><a href="#OS-X-下的-Docker-的使用" class="headerlink" title="OS X 下的 Docker 的使用"></a>OS X 下的 Docker 的使用</h3><p>下面是一些在 Docker 在 OS X 中使用的命令行。  </p>
 <ul>
-<li><p>由于依赖于 boot2docker，所以一开始必须要先初始化 boot2docker。  </p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ boot2docker init</div><div class="line"></div><div class="line">$ boot2docker start</div><div class="line"></div><div class="line">$ boot2docker shellinit</div></pre></td></tr></table></figure>
-</li>
-<li><p>现在 virtual box 中的 docker 也是安装和初始化好了，直接用即可。  </p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ docker <span class="keyword">run</span><span class="bash"> hello-world  //开启一个Container，输出hello-world，然后结束Container</span></div><div class="line">-</div><div class="line">$ docker <span class="keyword">run</span><span class="bash"> <span class="_">-d</span> -P —name web nginx   //<span class="_">-d</span>参数一直运行，-P参数将Container的端口映射到虚拟机的端口上</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>boot2docker和Docker常用状态管理命令。  </p>
-<figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">$</span> boot2docker status  <span class="comment">//查看虚拟机状态</span></div><div class="line"></div><div class="line"><span class="symbol">$</span> docker ps  <span class="comment">//查看虚拟机中所有的Container</span></div><div class="line"></div><div class="line"><span class="symbol">$</span> docker port web/xxx  <span class="comment">//查看正在运行的Container的端口号</span></div><div class="line"></div><div class="line"><span class="symbol">$</span> boot2docker ip  <span class="comment">//查看虚拟机在本机网络中的IP地址</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>Docker 可以开启一个 Container，里面再运行一个虚拟机。  </p>
-<figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">$</span> docker pull ubuntu  <span class="comment">//从官方仓库中拉ubantu的镜像</span></div><div class="line"></div><div class="line"><span class="symbol">$</span> docker run -t -i ubuntu /bin/bash  <span class="comment">//运行ubuntu虚拟机并使用bash，-t表示开启终端，-i表示交互显示</span></div><div class="line"></div><div class="line"><span class="symbol">$</span> docker images  <span class="comment">//查看本地所有镜像</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>官方提供了一个类似于 Github 的平台叫 <a href="https://hub.docker.com" target="_blank" rel="external">Docker Hub</a>，可以存储自己的镜像，或者与别人分享镜像。  </p>
-<figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">$</span> docker run -t -i training/sinatra /bin/bash  <span class="comment">//进入从镜像库中拉下来的镜像</span></div><div class="line"></div><div class="line"># gem install json  <span class="comment">//修改镜像</span></div><div class="line"></div><div class="line"><span class="symbol">$</span> docer commit -m “install json gem” container_id new_contailer_name   <span class="comment">//确认修改镜像</span></div><div class="line"></div><div class="line"><span class="symbol">$</span> docker images  <span class="comment">//查看新的修改过的镜像</span></div><div class="line"></div><div class="line"><span class="symbol">$</span> docker tag <span class="number">91</span>c95931e552 ftandy/hello_sss  <span class="comment">//为自己的镜像修改别名</span></div><div class="line"></div><div class="line"><span class="symbol">$</span> docker push ftandy/hello_sss <span class="comment">//push到自己的账号仓库上</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>分享的话也可以通过本地导出导出镜像文件分享。  </p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ docker save -o hello-world.tar hello-world</div><div class="line"></div><div class="line">$ docker load &lt; hello-world.tar</div></pre></td></tr></table></figure>
-</li>
+<li>由于依赖于 boot2docker，所以一开始必须要先初始化 boot2docker。<br>```<br>$ boot2docker init</li>
 </ul>
-<p>另外想要进阶的话，推荐<a href="http://dockerpool.com/static/books/docker_practice/introduction/README.html" target="_blank" rel="external">这本电子书</a>，和陈皓的<a href="http://coolshell.cn/articles/17010.html" target="_blank" rel="external">博客</a>。里面包含了Docker的方方面面。</p>
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ol>
-<li><a href="http://dockerpool.com/static/books/docker_practice/introduction/README.html" target="_blank" rel="external">http://dockerpool.com/static/books/docker_practice/introduction/README.html</a>  </li>
-<li><a href="https://www.docker.com/" target="_blank" rel="external">https://www.docker.com/</a></li>
-</ol>
+<p>$ boot2docker start</p>
+<p>$ boot2docker shellinit</p>
+<pre><code>
+- 现在 virtual box 中的 docker 也是安装和初始化好了，直接用即可。  
+</code></pre>
+<h2 id="docker-run-hello-world-开启一个Container，输出hello-world，然后结束Container"><a href="#docker-run-hello-world-开启一个Container，输出hello-world，然后结束Container" class="headerlink" title="$ docker run hello-world  //开启一个Container，输出hello-world，然后结束Container"></a>$ docker run hello-world  //开启一个Container，输出hello-world，然后结束Container</h2><p>$ docker run -d -P —name web nginx   //-d参数一直运行，-P参数将Container的端口映射到虚拟机的端口上</p>
+<pre><code>
+- boot2docker和Docker常用状态管理命令。  
+</code></pre>
+<p>$ boot2docker status  //查看虚拟机状态</p>
+<p>$ docker ps  //查看虚拟机中所有的Container</p>
+<p>$ docker port web/xxx  //查看正在运行的Container的端口号</p>
+<p>$ boot2docker ip  //查看虚拟机在本机网络中的IP地址</p>
+<pre><code>
+- Docker 可以开启一个 Container，里面再运行一个虚拟机。  
+</code></pre>
+<p>$ docker pull ubuntu  //从官方仓库中拉ubantu的镜像</p>
+<p>$ docker run -t -i ubuntu /bin/bash  //运行ubuntu虚拟机并使用bash，-t表示开启终端，-i表示交互显示</p>
+<p>$ docker images  //查看本地所有镜像</p>
+<pre><code>
+- 官方提供了一个类似于 Github 的平台叫 [Docker Hub](https://hub.docker.com)，可以存储自己的镜像，或者与别人分享镜像。  
+</code></pre>
+<p>$ docker run -t -i training/sinatra /bin/bash  //进入从镜像库中拉下来的镜像</p>
+<h1 id="gem-install-json-修改镜像"><a href="#gem-install-json-修改镜像" class="headerlink" title="gem install json  //修改镜像"></a>gem install json  //修改镜像</h1><p>$ docer commit -m “install json gem” container_id new_contailer_name   //确认修改镜像</p>
+<p>$ docker images  //查看新的修改过的镜像</p>
+<p>$ docker tag 91c95931e552 ftandy/hello_sss  //为自己的镜像修改别名</p>
+<p>$ docker push ftandy/hello_sss //push到自己的账号仓库上</p>
+<pre><code>
+- 分享的话也可以通过本地导出导出镜像文件分享。  
+</code></pre>
+<p>$ docker save -o hello-world.tar hello-world</p>
+<p>$ docker load &lt; hello-world.tar</p>
+<pre><code>
+另外想要进阶的话，推荐[这本电子书](http://dockerpool.com/static/books/docker_practice/introduction/README.html)，和陈皓的[博客](http://coolshell.cn/articles/17010.html)。里面包含了Docker的方方面面。
+
+### 参考资料
+
+1. http://dockerpool.com/static/books/docker_practice/introduction/README.html  
+2. https://www.docker.com/
+
+</code></pre>
 
         
         </div>
@@ -304,7 +324,7 @@
 
 </div>
 
-    <a data-url="http://ftandy.com/2015/07/05/2015-07-05-docker/" data-id="clo1n69hi000poasnc97ftx80" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://ftandy.com/2015/07/05/2015-07-05-docker/" data-id="clo1nvt5h000y9asncuj7du55" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding

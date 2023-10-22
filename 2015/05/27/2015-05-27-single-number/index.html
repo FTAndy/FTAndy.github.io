@@ -259,21 +259,29 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <h2 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h2><p>算法很弱啊，怎么办啊，边看<a href="http://book.douban.com/subject/19952400/" target="_blank" rel="external">《算法》</a>边做题吧。听说 leetcode 的题很适合初入职场的菜鸟，就来吧。<br>我把 Ruby 版的 leetcode 解题过程放在了<a href="https://github.com/FTAndy/leetcode" target="_blank" rel="external">github</a>上。</p>
-<a id="more"></a>
-<h2 id="Single-number"><a href="#Single-number" class="headerlink" title="Single number"></a>Single number</h2><p>题目地址：<a href="https://leetcode.com/problems/single-number/" target="_blank" rel="external">https://leetcode.com/problems/single-number/</a>  </p>
+            <h2 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h2><p>算法很弱啊，怎么办啊，边看<a target="_blank" rel="noopener" href="http://book.douban.com/subject/19952400/">《算法》</a>边做题吧。听说 leetcode 的题很适合初入职场的菜鸟，就来吧。<br>我把 Ruby 版的 leetcode 解题过程放在了<a target="_blank" rel="noopener" href="https://github.com/FTAndy/leetcode">github</a>上。</p>
+<span id="more"></span>
+
+<h2 id="Single-number"><a href="#Single-number" class="headerlink" title="Single number"></a>Single number</h2><p>题目地址：<a target="_blank" rel="noopener" href="https://leetcode.com/problems/single-number/">https://leetcode.com/problems/single-number/</a>  </p>
 <blockquote>
 <p>Given an array of integers, every element appears twice except for one. Find that single one.<br>Note:<br>Your algorithm should have a linear runtime complexity. Could you implement it without using extra memory?<br>题目描述：一个数组有很多个整形数，每个数出现两次，但是只有一个数出现一次，找出那个数。  </p>
 </blockquote>
 <p>用 Ruby 标准库的<code>index</code>和<code>rindex</code>一行搞定。  </p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">single_number</span><span class="params">(nums)</span></span></div><div class="line">    nums.each &#123;<span class="params">|num|</span> <span class="keyword">return</span> num <span class="keyword">if</span> nums.index(num) == nums.rindex(num) &#125;</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
+<pre><code class="ruby">def single_number(nums)
+    nums.each &#123;|num| return num if nums.index(num) == nums.rindex(num) &#125;
+end
+</code></pre>
 <p>做完之后发现很多人倾向于用xor异或运算，也是一行搞定。  </p>
 <p><code>^</code>运算：</p>
 <p>按位运算时，同为0，异为1。</p>
 <p>法则：<br><code>a ^ b ^ c</code> 与 <code>a ^ c ^ b</code> 相同。</p>
 <p><code>a ^ a = 0</code>，<code>a ^ 0 = a</code></p>
 <p>所以当所有数做异或运算时，相同的两个数最终为0，而0异或任何数为任何数，得到唯一值。  </p>
-<p>异或版：<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">single_number</span><span class="params">(nums)</span></span></div><div class="line">    nums.inject &#123;<span class="params">|result,num|</span> result ^=num &#125;</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure></p>
+<p>异或版：  </p>
+<pre><code class="ruby">def single_number(nums)
+    nums.inject &#123;|result,num| result ^=num &#125;
+end
+</code></pre>
 
         
         </div>
@@ -284,7 +292,7 @@
 
 </div>
 
-    <a data-url="http://ftandy.com/2015/05/27/2015-05-27-single-number/" data-id="clo1n69hc000doasnkzj3bmof" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://ftandy.com/2015/05/27/2015-05-27-single-number/" data-id="clo1nvt56000g9asnd4xn1tpj" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding

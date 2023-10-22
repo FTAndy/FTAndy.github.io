@@ -259,16 +259,40 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <h3 id="Same-Tree"><a href="#Same-Tree" class="headerlink" title="Same Tree"></a>Same Tree</h3><p>题目地址：<a href="https://leetcode.com/problems/same-tree/" target="_blank" rel="external">https://leetcode.com/problems/same-tree/</a>  </p>
-<a id="more"></a>
+            <h3 id="Same-Tree"><a href="#Same-Tree" class="headerlink" title="Same Tree"></a>Same Tree</h3><p>题目地址：<a target="_blank" rel="noopener" href="https://leetcode.com/problems/same-tree/">https://leetcode.com/problems/same-tree/</a>  </p>
+<span id="more"></span>
+
 <blockquote>
 <p>Given two binary trees, write a function to check if they are equal or not.</p>
+</blockquote>
+<blockquote>
 <p>Two binary trees are considered equal if they are structurally identical and the nodes have the same value.</p>
 </blockquote>
 <p>判断两个二叉树是否相同。</p>
 <p>利用递归即可。</p>
 <p>ruby版：  </p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Definition for a binary tree node.</span></div><div class="line"><span class="comment"># class TreeNode</span></div><div class="line"><span class="comment">#     attr_accessor :val, :left, :right</span></div><div class="line"><span class="comment">#     def initialize(val)</span></div><div class="line"><span class="comment">#         <span class="doctag">@val</span> = val</span></div><div class="line"><span class="comment">#         <span class="doctag">@left</span>, <span class="doctag">@right</span> = nil, nil</span></div><div class="line"><span class="comment">#     end</span></div><div class="line"><span class="comment"># end</span></div><div class="line"></div><div class="line"><span class="comment"># <span class="doctag">@param</span> &#123;TreeNode&#125; p</span></div><div class="line"><span class="comment"># <span class="doctag">@param</span> &#123;TreeNode&#125; q</span></div><div class="line"><span class="comment"># <span class="doctag">@return</span> &#123;Boolean&#125;</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">is_same_tree</span><span class="params">(p, q)</span></span></div><div class="line">    <span class="keyword">if</span> (q.<span class="literal">nil</span>? &amp;&amp; p.<span class="literal">nil</span>?) </div><div class="line">        <span class="keyword">return</span> <span class="literal">true</span></div><div class="line">    <span class="keyword">elsif</span> (q.<span class="literal">nil</span>? <span class="params">||</span> p.<span class="literal">nil</span>?) <span class="params">||</span> (q.val != p.val)</div><div class="line">        <span class="keyword">return</span> <span class="literal">false</span></div><div class="line">    <span class="keyword">elsif</span> q.val == p.val</div><div class="line">        <span class="keyword">return</span> is_same_tree(q.left, p.left) &amp;&amp; is_same_tree(q.right, p.right)</div><div class="line">    <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
+<pre><code class="ruby"># Definition for a binary tree node.
+# class TreeNode
+#     attr_accessor :val, :left, :right
+#     def initialize(val)
+#         @val = val
+#         @left, @right = nil, nil
+#     end
+# end
+
+# @param &#123;TreeNode&#125; p
+# @param &#123;TreeNode&#125; q
+# @return &#123;Boolean&#125;
+def is_same_tree(p, q)
+    if (q.nil? &amp;&amp; p.nil?) 
+        return true
+    elsif (q.nil? || p.nil?) || (q.val != p.val)
+        return false
+    elsif q.val == p.val
+        return is_same_tree(q.left, p.left) &amp;&amp; is_same_tree(q.right, p.right)
+    end
+end
+</code></pre>
 
         
         </div>
@@ -279,7 +303,7 @@
 
 </div>
 
-    <a data-url="http://ftandy.com/2015/06/07/2015-06-07-leetcode/" data-id="clo1n69hj000soasnh90wfagz" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://ftandy.com/2015/06/07/2015-06-07-leetcode/" data-id="clo1nvt59000k9asn4s401tg7" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding

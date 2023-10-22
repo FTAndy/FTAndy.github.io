@@ -260,11 +260,14 @@
         
             
             <p>stanford 的 compiler 暂时还没有开课，但是我已经在看作业说明了，发现第一个作业的说明怎么这么难懂，这要尼玛说什么啊。<br>所以就把作业说明先翻译出来，自己做个笔记，以后开课的时候可以看。</p>
-<a id="more"></a>
-<h3 id="作业说明"><a href="#作业说明" class="headerlink" title="作业说明"></a>作业说明</h3><p><a href="https://spark-public.s3.amazonaws.com/compilers/assignments-public/PA1.pdf" target="_blank" rel="external">pdf地址</a>。  </p>
+<span id="more"></span>
+
+<h3 id="作业说明"><a href="#作业说明" class="headerlink" title="作业说明"></a>作业说明</h3><p><a target="_blank" rel="noopener" href="https://spark-public.s3.amazonaws.com/compilers/assignments-public/PA1.pdf">pdf地址</a>。  </p>
 <p>下面是用flex做词法分析器要求的翻译，其他的资源如cool手册和flex的手册课程上都有给链接。  </p>
 <hr>
-<h4 id="3-文件和目录"><a href="#3-文件和目录" class="headerlink" title="3.文件和目录"></a>3.文件和目录</h4><p>要开始的话，在你想要做作业的地方创建一个新的目录，执行下面的指令在那个新目录。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">make <span class="_">-f</span> /usr/class/cs143/assignments/PA2/Makefile</div></pre></td></tr></table></figure></p>
+<h4 id="3-文件和目录"><a href="#3-文件和目录" class="headerlink" title="3.文件和目录"></a>3.文件和目录</h4><p>要开始的话，在你想要做作业的地方创建一个新的目录，执行下面的指令在那个新目录。  </p>
+<pre><code class="bash">make -f /usr/class/cs143/assignments/PA2/Makefile
+</code></pre>
 <p>这个命令将产生一堆文件，下面对三个文件进行说明：  </p>
 <ul>
 <li><p><strong>cool.flex</strong> </p>
@@ -276,8 +279,10 @@
 <h4 id="4-词法扫描结果"><a href="#4-词法扫描结果" class="headerlink" title="4 词法扫描结果"></a>4 词法扫描结果</h4><p>在这个课程中，你需要写Flex的规则去匹配正确的正则表达式，认证Cool正确的taken，产生正确的动作，纪录词法的值，或者抛出错误当错误条件触发时。有关正确token资料在Cool手册的第十章第一节上。在你做这个作业之前，确保你认真阅读了Cool手册的第十章第一节，然后学习不同的token是怎么在cool-parse.h文件上定义的（这个文件在cool编译器中有）。你应该实现Flex的规则为每个在cool-parse.h上定义的正确的token，去匹配对应的正则表达式，为每个token执行正确的动作。例如：假如你匹配了一个BOOL_CONST的token，你的词法分析器必须记录这个bool的值是真还是假；相似的，假如你匹配了一个TYPEID的token，你应该记录这个type的的名字。注意，不是每个token都需要记录额外的信息；例如，只有返回的token类型符合某些token类型才需要记录额外信息，例如：keywords。<br>    你的词法扫描器健壮性一定要强，应该可以在任何可以想象到的输入都正常工作。例如，你必须要处理错误，当关键词EOF出现在字符串或者注释中间的时候，还有就是字符串过长的情况也要考虑。这都是一些你应该处理的常见错误，其余的部分自己看手册啦。<br>    假如一个错误出现，你必须优雅地引起错误并显示。核心异常或者不可捕捉的异常是不可以接受的。  </p>
 <h5 id="4-1-错误处理"><a href="#4-1-错误处理" class="headerlink" title="4.1 错误处理"></a>4.1 错误处理</h5><p>所有错误信息都应该传递语法分析器。词法分析器不应该输出任何东西。错误应该通过返回特殊的错误信息ERROR与语法分析器进行交流（注意，你应该忽视名为error的token，这个是在作业3中的语法分析器中用的）。还有几个需要注意的地方需要词法分析器错误抛出：  </p>
 <ul>
-<li>当一个不合法的字符（一个不匹配任何token的字符）出现的时候，那个包含这个字符的字符串应该返回为一个错误的字符串。继续为下一个token进行解释。   </li>
-<li>假如一个字符串含有一个unescaped的新行，报告这个错误为‘‘Unterminated string constant’’，然后继续解析下一行，我们假设程序员忘记了写引号的下一半。</li>
+<li><p>当一个不合法的字符（一个不匹配任何token的字符）出现的时候，那个包含这个字符的字符串应该返回为一个错误的字符串。继续为下一个token进行解释。   </p>
+</li>
+<li><p>假如一个字符串含有一个unescaped的新行，报告这个错误为‘‘Unterminated string constant’’，然后继续解析下一行，我们假设程序员忘记了写引号的下一半。</p>
+</li>
 <li><p>假如一个字符串太长，报告这个错误为‘‘String constant too long’’为这个字符串类型为ERROR。假如这个字符串含有不合法的字符（例如：null字符），报告这个错误为 ‘‘String contains null character’’。在任何错误情况下，词法解析器都应该在这个字符串的结尾为下一个字符解析。这个结尾应该是下面这几种情况：  </p>
 <ol>
 <li>这个错误出现之后，假如一个unescaped的新行出现在这个下一行的开始。</li>
@@ -286,8 +291,10 @@
 </li>
 <li><p>假如一个注释里面有EOF关键词，报告这个错误‘‘EOF in comment’’。不要尝试去解析注释里面的内容。类似的，假如一个字符串里面有EOF关键词，报告这个错误‘‘EOF in string constant’’。</p>
 </li>
-<li>假如有”<em>)” 在一个注释之外，报告这个错误‘‘Unmatched </em>)’’，而不要分析它为 * 和 )。</li>
-<li>回想起这次课，这阶段的编译器只是捕捉非常有限的错误。不要尝试去检查不是在词法解析器的错误。例如，不应该检查一个在用变量之前，变量是否声明了。确认你充分了解什么错误处理词法分析器应该做，在你没有了解之前不要开始。</li>
+<li><p>假如有”*)” 在一个注释之外，报告这个错误‘‘Unmatched *)’’，而不要分析它为 * 和 )。</p>
+</li>
+<li><p>回想起这次课，这阶段的编译器只是捕捉非常有限的错误。不要尝试去检查不是在词法解析器的错误。例如，不应该检查一个在用变量之前，变量是否声明了。确认你充分了解什么错误处理词法分析器应该做，在你没有了解之前不要开始。</p>
+</li>
 </ul>
 <h5 id="4-2-字符串表"><a href="#4-2-字符串表" class="headerlink" title="4.2 字符串表"></a>4.2 字符串表</h5><p>程序会对一个token分析多次。例如，一个定义标示一般都会在程序中用到很多次。为了节省空间和时间，一个正常编译器的实现方法是保存词法在一个字符串表上。我们提供一个字符串表的C++接口。<br>    有一个问题，就是怎么为基础的类（Object, Int, Bool, String）,SELF_TYPE和self，去处理特殊的定义标示。在语法分析器部分之前，这个问题不会真正出现。词法分析器应该处理这些特殊标示符像其他定义标示一样。  </p>
 <h5 id="4-3-字符串"><a href="#4-3-字符串" class="headerlink" title="4.3 字符串"></a>4.3 字符串</h5><p>词法分析器应该对一个字符串的中逃离的字符进行转义，变成一个正确的字符串。例如，假如这个字符串为”ab\ncd”，词法分析器应该返回 STR_CONST，值为ab\ncd，其中\n为单独的字符。根据Cool手册第15页的描述，你应该为包含了null字符的字符串返回一个错误信息。像\0这样的转义字符应该转化为0。</p>
@@ -308,7 +315,7 @@
 
 </div>
 
-    <a data-url="http://ftandy.com/2015/06/17/2015-06-17-complier/" data-id="clo1n69hi000noasn9o3ffxoq" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://ftandy.com/2015/06/17/2015-06-17-complier/" data-id="clo1nvt5g000w9asnfkd4dlrb" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding

@@ -260,7 +260,8 @@
         
             
             <h3 id="什么是-Vagrant？"><a href="#什么是-Vagrant？" class="headerlink" title="什么是 Vagrant？"></a>什么是 Vagrant？</h3><p>简单来说，Vagrant 就是一个虚拟机的管理工具，运行在全平台上，主要用 Ruby 语言开发，只有命令行，没有 GUI。下面是 Vagrant 的在操作系统中的原理图：  </p>
-<a id="more"></a>
+<span id="more"></span>
+
 <p><img src="/images/vagrant_docker/vagrant.png" alt="Image">  </p>
 <h3 id="为什么要使用-Vagrant？"><a href="#为什么要使用-Vagrant？" class="headerlink" title="为什么要使用 Vagrant？"></a>为什么要使用 Vagrant？</h3><p>为什么我要使用 Vagrant？假如我要虚拟一个操作系统，直接用虚拟机不就完了吗？</p>
 <p>从个人的角度上，你完全可以使用图形化的虚拟机完成你想要的任何操作，你也可以把操作好的虚拟环境文件传给你其他的小伙伴。</p>
@@ -272,23 +273,46 @@
 <li>portable（非常轻便）</li>
 </ul>
 <p>下面的 demo 流程基本上就能提现出上面三点。</p>
-<h3 id="怎么使用-Vagrant？"><a href="#怎么使用-Vagrant？" class="headerlink" title="怎么使用 Vagrant？"></a>怎么使用 Vagrant？</h3><p>使用 Vagrant 必须要基于某种虚拟机，virtual box 是 vagrant 官网推荐免费的非常轻巧的虚拟机。如需要其他的高大上的虚拟机，可以参考<a href="http://www.vagrantup.com/vmware" target="_blank" rel="external">这里</a>进行购买。下面我们使用 Vagrant，基于 OS X 安装。</p>
-<h4 id="Step1（下载）"><a href="#Step1（下载）" class="headerlink" title="Step1（下载）"></a>Step1（下载）</h4><p>到<a href="https://www.virtualbox.org/wiki/Downloads" target="_blank" rel="external">这里</a>下载 virtual box 并安装。<br>到<a href="http://docs.vagrantup.com/v2/installation/index.html" target="_blank" rel="external">这里</a>下载 Vagrant 并安装。<br>下一个 <a href="http://files.vagrantup.com/precise64.box" target="_blank" rel="external">ubuntu 镜像</a>的.box文件。（其他镜像到<a href="http://www.vagrantbox.es/" target="_blank" rel="external">这里</a>下载）<br>好，这么就可以开始了。</p>
+<h3 id="怎么使用-Vagrant？"><a href="#怎么使用-Vagrant？" class="headerlink" title="怎么使用 Vagrant？"></a>怎么使用 Vagrant？</h3><p>使用 Vagrant 必须要基于某种虚拟机，virtual box 是 vagrant 官网推荐免费的非常轻巧的虚拟机。如需要其他的高大上的虚拟机，可以参考<a target="_blank" rel="noopener" href="http://www.vagrantup.com/vmware">这里</a>进行购买。下面我们使用 Vagrant，基于 OS X 安装。</p>
+<h4 id="Step1（下载）"><a href="#Step1（下载）" class="headerlink" title="Step1（下载）"></a>Step1（下载）</h4><p>到<a target="_blank" rel="noopener" href="https://www.virtualbox.org/wiki/Downloads">这里</a>下载 virtual box 并安装。<br>到<a target="_blank" rel="noopener" href="http://docs.vagrantup.com/v2/installation/index.html">这里</a>下载 Vagrant 并安装。<br>下一个 <a target="_blank" rel="noopener" href="http://files.vagrantup.com/precise64.box">ubuntu 镜像</a>的.box文件。（其他镜像到<a target="_blank" rel="noopener" href="http://www.vagrantbox.es/">这里</a>下载）<br>好，这么就可以开始了。</p>
 <h4 id="STEP2（配置和初始）"><a href="#STEP2（配置和初始）" class="headerlink" title="STEP2（配置和初始）"></a>STEP2（配置和初始）</h4><p>在你下载的 ubuntu 镜像目录下将这个.box文件添加到 vagrant 的 box 管理列表，并随便取一个名字。 </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ vagrant box add ~/precise64.box --name lol</div><div class="line">$ vagrant box list</div><div class="line">lol  (virtualbox, 0)</div></pre></td></tr></table></figure>
+<pre><code class="bash">$ vagrant box add ~/precise64.box --name lol
+$ vagrant box list
+lol  (virtualbox, 0)
+</code></pre>
 <p>在你平时搞 project 的地方创建一个管理 vagrant demo 的文档，创建一个 demo1，然后用 init 创建刚刚加的 lol box。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> ~/Project &amp;&amp; mkdir vagrant &amp;&amp; <span class="built_in">cd</span> vagrant &amp;&amp; mkdir demo1 &amp;&amp; <span class="built_in">cd</span> demo1</div><div class="line">$ vagrant init lol</div></pre></td></tr></table></figure>
+<pre><code class="bash">$ cd ~/Project &amp;&amp; mkdir vagrant &amp;&amp; cd vagrant &amp;&amp; mkdir demo1 &amp;&amp; cd demo1
+$ vagrant init lol
+</code></pre>
 <p>这时候你会看到 vagrant 会生成一个配置文件 Vagrantfile，可以打开进去读读里面的配置信息。<br>然后启动吧。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ vagrant up</div></pre></td></tr></table></figure>
+<pre><code class="bash">$ vagrant up
+</code></pre>
 <p>这时候会初始化一些东西，然后后台就会开启一个相对于当前文档的 ubuntu 虚拟机，可以进去查看一下。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ vagrant global-status</div><div class="line">id       name    provider   state    directory</div><div class="line">220609b  default virtualbox running  /Users/FTAndy/Project/vagrant/demo5</div><div class="line"></div><div class="line">$ vagrant ssh</div><div class="line"></div><div class="line">...</div><div class="line"></div><div class="line">vagrant@precise64:~$</div></pre></td></tr></table></figure>
+<pre><code class="bash">$ vagrant global-status
+id       name    provider   state    directory
+220609b  default virtualbox running  /Users/FTAndy/Project/vagrant/demo5
+
+$ vagrant ssh
+
+...
+
+vagrant@precise64:~$
+</code></pre>
 <h4 id="STEP3-做些什么"><a href="#STEP3-做些什么" class="headerlink" title="STEP3(做些什么)"></a>STEP3(做些什么)</h4><p>进入了虚拟机之后就可以配置你想要的环境了，可以安装一个 nginx 玩玩。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">vagrant@precise64:~$ sudo apt-get update</div><div class="line">vagrant@precise64:~$ sudo apt-get install nginx</div></pre></td></tr></table></figure>
+<pre><code class="bash">vagrant@precise64:~$ sudo apt-get update
+vagrant@precise64:~$ sudo apt-get install nginx
+</code></pre>
 <p>在外面的 Vagrantfile 上设置 forwarded_port，将 guest 的80映射到 host 的8080。退出虚拟机之后 reload 一下配置。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">config.vm.network :forwarded_port, guest: 80, host: 8080</div><div class="line"></div><div class="line">vagrant@precise64:~$ <span class="built_in">exit</span></div><div class="line"></div><div class="line">$ vagrant reload</div></pre></td></tr></table></figure>
+<pre><code class="bash">config.vm.network :forwarded_port, guest: 80, host: 8080
+
+vagrant@precise64:~$ exit
+
+$ vagrant reload
+</code></pre>
 <p>OK。访问一下本地的8080端口吧。“Welcome to nginx!”</p>
 <p>最后，可以把你做的东西打包起来，拿到.box文件，传给别人用。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ vagrant package</div></pre></td></tr></table></figure>
+<pre><code class="bash">$ vagrant package
+</code></pre>
 <p>然后会生成一个 package.box 文件，给你的小伙伴用吧。</p>
 <h3 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h3><p>1.销毁  </p>
 <p>可以通过三种方式挂起活着关闭后台的vagrant程序：</p>
@@ -302,26 +326,47 @@
 <p>3.外网映射机制  </p>
 <p>Vagrant 的网络配置支持3种：</p>
 <ul>
-<li><a href="http://docs.vagrantup.com/v2/networking/forwarded_ports.html" target="_blank" rel="external">Forwarded ports</a></li>
+<li><a target="_blank" rel="noopener" href="http://docs.vagrantup.com/v2/networking/forwarded_ports.html">Forwarded ports</a></li>
 </ul>
 <p>将虚拟机的某个端口绑定到本机端口。</p>
 <ul>
-<li><a href="http://docs.vagrantup.com/v2/networking/private_network.html" target="_blank" rel="external">Private networks</a></li>
+<li><a target="_blank" rel="noopener" href="http://docs.vagrantup.com/v2/networking/private_network.html">Private networks</a></li>
 </ul>
 <p>分配给虚拟机一个私有 ip，这样可以在本机上访问虚拟机的所有端口。</p>
 <ul>
-<li><a href="http://docs.vagrantup.com/v2/networking/public_network.html" target="_blank" rel="external">Public networks</a></li>
+<li><a target="_blank" rel="noopener" href="http://docs.vagrantup.com/v2/networking/public_network.html">Public networks</a></li>
 </ul>
 <p>让虚拟机暴露在真实的网络中，跟本机同等。</p>
-<p>用来开发的话，Forwarded ports 和 Private networks 就够了，如果要开放的端口比较多并且要用 rsync 这样的工具的话，Private networks 更方便。如果要给内网部署 <a href="http://gitlab.org/" target="_blank" rel="external">Gitlab</a> 这样的工具给团队使用，则使用 Public networks。</p>
+<p>用来开发的话，Forwarded ports 和 Private networks 就够了，如果要开放的端口比较多并且要用 rsync 这样的工具的话，Private networks 更方便。如果要给内网部署 <a target="_blank" rel="noopener" href="http://gitlab.org/">Gitlab</a> 这样的工具给团队使用，则使用 Public networks。</p>
 <p>4.常用命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">$ vagrant box add ~/xxx.box --name <span class="string">"your_box_name"</span></div><div class="line"></div><div class="line">$ vagrant box list</div><div class="line"></div><div class="line">$ vagrant init <span class="string">"your local box or online box"</span></div><div class="line"></div><div class="line">$ vagrant up —provider=virtural_box</div><div class="line"></div><div class="line">$ vagrant global-status</div><div class="line"></div><div class="line">$ vagrant status</div><div class="line"></div><div class="line">$ vagrant reload</div><div class="line"></div><div class="line">$ vagrant package</div><div class="line"></div><div class="line">$ vagrant halt</div><div class="line"></div><div class="line">$ vagrant <span class="built_in">suspend</span></div><div class="line"></div><div class="line">$ vagrant destroy</div></pre></td></tr></table></figure>
+<pre><code class="bash">$ vagrant box add ~/xxx.box --name &quot;your_box_name&quot;
+
+$ vagrant box list
+
+$ vagrant init &quot;your local box or online box&quot;
+
+$ vagrant up —provider=virtural_box
+
+$ vagrant global-status
+
+$ vagrant status
+
+$ vagrant reload
+
+$ vagrant package
+
+$ vagrant halt
+
+$ vagrant suspend
+
+$ vagrant destroy
+</code></pre>
 <h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ol>
-<li><a href="http://segmentfault.com/a/1190000000264347" target="_blank" rel="external">http://segmentfault.com/a/1190000000264347</a></li>
-<li><a href="http://chloerei.com/2013/11/01/vagrant/" target="_blank" rel="external">http://chloerei.com/2013/11/01/vagrant/</a></li>
-<li><a href="https://www.vagrantup.com/" target="_blank" rel="external">https://www.vagrantup.com/</a></li>
-<li><a href="https://github.com/mitchellh/vagrant" target="_blank" rel="external">https://github.com/mitchellh/vagrant</a></li>
-<li><a href="https://www.vagrantup.com/" target="_blank" rel="external">https://www.vagrantup.com/</a></li>
+<li><a target="_blank" rel="noopener" href="http://segmentfault.com/a/1190000000264347">http://segmentfault.com/a/1190000000264347</a></li>
+<li><a target="_blank" rel="noopener" href="http://chloerei.com/2013/11/01/vagrant/">http://chloerei.com/2013/11/01/vagrant/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.vagrantup.com/">https://www.vagrantup.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/mitchellh/vagrant">https://github.com/mitchellh/vagrant</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.vagrantup.com/">https://www.vagrantup.com/</a></li>
 </ol>
 
         
@@ -333,7 +378,7 @@
 
 </div>
 
-    <a data-url="http://ftandy.com/2015/05/11/2015-05-11-vagrant/" data-id="clo1n69hc000boasncsokq0po" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://ftandy.com/2015/05/11/2015-05-11-vagrant/" data-id="clo1nvt53000b9asn4hzchd6z" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding

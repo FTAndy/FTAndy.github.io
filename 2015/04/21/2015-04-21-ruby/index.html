@@ -260,7 +260,8 @@
         
             
             <p>用 Ruby 也快有一年了，总结一下 Ruby 中对象和类模型，表达不是很熟练，请轻喷。</p>
-<a id="more"></a>
+<span id="more"></span>
+
 <h3 id="Ruby的对象和类模型到底是什么鬼？"><a href="#Ruby的对象和类模型到底是什么鬼？" class="headerlink" title="Ruby的对象和类模型到底是什么鬼？"></a>Ruby的对象和类模型到底是什么鬼？</h3><p>在 Ruby 的世界中，有这么三个原则：</p>
 <ul>
 <li><p>所有东西都是对象，除了 method 和 block</p>
@@ -272,39 +273,87 @@
 </ul>
 <p>在这个描述中，假设定义了一个类 Dog，实例化一个对象 tidy，对象 tidy 的类是 Dog，Dog 类的类是 Class，<br>Class 继承自 Module，Module 继承自 Object，Object 最终继承自源类 BasicObject，BasicObject 也是对象，那 BasicObject 的继承自谁？  </p>
 <p>在这里我打开 irb，ruby 的版本为2.1.2，进行操作。  </p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> ;</span> <span class="keyword">end</span></div><div class="line">tidy = Dog.new</div><div class="line">tidy.<span class="keyword">class</span> <span class="comment">#=&gt; Dog</span></div><div class="line">Dog.<span class="keyword">class</span>  <span class="comment">#=&gt; Class</span></div><div class="line">Class.superclass <span class="comment">#=&gt; Module</span></div><div class="line">Module.superclass <span class="comment">#=&gt; Object</span></div><div class="line">Object.superclass <span class="comment">#=&gt; BasicObject</span></div><div class="line">BasicObject.superclass <span class="comment">#=&gt; nil</span></div></pre></td></tr></table></figure>
+<pre><code class="ruby">class Dog ; end
+tidy = Dog.new
+tidy.class #=&gt; Dog
+Dog.class  #=&gt; Class
+Class.superclass #=&gt; Module
+Module.superclass #=&gt; Object
+Object.superclass #=&gt; BasicObject
+BasicObject.superclass #=&gt; nil
+</code></pre>
 <p>很明显，BasicObject 没有超类，这条贪食蛇吃到这里就终止了。<br>而Dog继承关系上的类概念：Dog，Class，Module，Object，BasicObject 的类都是 Class。  </p>
 <p>也就是说我可以创建这些类概念的实例对象，Dog 就是一只狗，Class 就是一个类，Module 就是一个模块，<br>Object 就是一个对象，BasicObject 就是一个基础对象。而 Dog，Module 和 Class 自己本身都是 Class 类的一个<br>实例对象，可以去创建我们想要用的概念对象。  </p>
-<p>而 Object 和 BasicObject 包括一些对象的基本方法，例如 Object 的 nil? 方法，<br>因为所有对象都会继承自 Object，所以所有对象都会有 <code>nil</code> 方法；又例如 BasicObject 的 <code>instance_eval 方法，因为所有对象
-也会继承自 BasicObject，所以所有对象也会有</code>instance_eval 方法。<br>这些方法都可以在 <a href="http://ruby-doc.org/core-2.2.2/BasicObject.html" target="_blank" rel="external">Ruby的手册</a>上看到。 </p>
-<p>这里我画了一个继承的图出来。<br><img src="https://ruby-china-files.b0.upaiyun.com/photo/2015/c11cbf514d990362ca34f9c71e58c2d7.png" alt="">   </p>
-<p>那 BasicObject 和 Object 有没有 <code>nil? 和</code>instance_ev 方法呢？<br>当然会有，因为他是 Class 的实例对象，对象都继承 Object 和 BasicObject，<br>他们都可以享有自己的方法。  </p>
+<p>而 Object 和 BasicObject 包括一些对象的基本方法，例如 Object 的 nil? 方法，<br>因为所有对象都会继承自 Object，所以所有对象都会有 <code>nil</code> 方法；又例如 BasicObject 的 <code>instance_eval 方法，因为所有对象 也会继承自 BasicObject，所以所有对象也会有 </code>instance_eval 方法。<br>这些方法都可以在 <a target="_blank" rel="noopener" href="http://ruby-doc.org/core-2.2.2/BasicObject.html">Ruby的手册</a>上看到。 </p>
+<p>这里我画了一个继承的图出来。<br><img src="https://ruby-china-files.b0.upaiyun.com/photo/2015/c11cbf514d990362ca34f9c71e58c2d7.png">   </p>
+<p>那 BasicObject 和 Object 有没有 <code>nil? 和 </code>instance_ev 方法呢？<br>当然会有，因为他是 Class 的实例对象，对象都继承 Object 和 BasicObject，<br>他们都可以享有自己的方法。  </p>
 <p>而我们在讨论对象和类模型的时候一般都会忽略掉 BasicObject，因为他置于最顶层，我们不会轻易改变他们，<br>而只讨论 Object 以下的对象和类。  </p>
 <h3 id="eigenclass"><a href="#eigenclass" class="headerlink" title="eigenclass"></a>eigenclass</h3><p>eigenclass 也叫元类或者单件类。eigen 的意思为本质的，换我们中国人古代的概念应该叫元神。<br>每个对象都有自己的 eigenclass，可以通过连个方法找到他。下面代码找出了一只泰迪狗和 Dog 类的元类。  </p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">Dog</span> ;</span> <span class="keyword">end</span></div><div class="line">tidy = Dog.new</div><div class="line">tidy_eigenclass = <span class="class"><span class="keyword">class</span> &lt;&lt; tidy</span></div><div class="line">   <span class="keyword">self</span></div><div class="line"><span class="keyword">end</span> </div><div class="line">tidy_eigenclass =&gt; #&lt;Class:#&lt;Dog:0x000000023bc5e8&gt;&gt;</div><div class="line">tidy_eigenclass.<span class="keyword">class</span> <span class="comment">#=&gt; Class</span></div><div class="line">tidy_eigenclass.superclass <span class="comment">#=&gt; Dog</span></div><div class="line"></div><div class="line">Dog_eigenclass = <span class="class"><span class="keyword">class</span> &lt;&lt; Dog</span></div><div class="line">    <span class="keyword">self</span></div><div class="line"><span class="keyword">end</span></div><div class="line">Dog_eigenclass=&gt; #&lt;Class:Dog&gt;</div><div class="line">a = Dog_eigenclass.<span class="keyword">class</span>=&gt; Class</div><div class="line">Dog_eigenclass.superclass=&gt; #&lt;Class:Object&gt;</div><div class="line">Dog_eigenclass == a <span class="comment">#=&gt; true</span></div></pre></td></tr></table></figure>
+<pre><code class="ruby">def Dog ; end
+tidy = Dog.new
+tidy_eigenclass = class &lt;&lt; tidy
+   self
+end 
+tidy_eigenclass =&gt; #&lt;Class:#&lt;Dog:0x000000023bc5e8&gt;&gt;
+tidy_eigenclass.class #=&gt; Class
+tidy_eigenclass.superclass #=&gt; Dog
+
+Dog_eigenclass = class &lt;&lt; Dog
+    self
+end
+Dog_eigenclass=&gt; #&lt;Class:Dog&gt;
+a = Dog_eigenclass.class=&gt; Class
+Dog_eigenclass.superclass=&gt; #&lt;Class:Object&gt;
+Dog_eigenclass == a #=&gt; true
+</code></pre>
 <p>上面的代码的意思是：在泰迪狗和 Dog 类的之前还有一个 eigenclass，Dog 类与 Class 类之前还有一个 eigenclass。<br>其实可以通过 <code>class &lt;&lt; XXX</code> 和 <code>XXX.singleton_class</code> 两种方法来找到对象的元类：</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Dog_eigenclass = <span class="class"><span class="keyword">class</span> &lt;&lt; Dog</span></div><div class="line">    <span class="keyword">self</span></div><div class="line"><span class="keyword">end</span></div><div class="line">Dog_eigenclass=&gt; #&lt;Class:Dog&gt;</div><div class="line">Dog.singleton_class=&gt; #&lt;Class:Dog&gt;</div></pre></td></tr></table></figure>
+<pre><code class="ruby">Dog_eigenclass = class &lt;&lt; Dog
+    self
+end
+Dog_eigenclass=&gt; #&lt;Class:Dog&gt;
+Dog.singleton_class=&gt; #&lt;Class:Dog&gt;
+</code></pre>
 <p>那元类有什么作用呢？<br>其实有了元类，当我们想要扩展对象和类自身的方法而非继承方法的时候，就变得非常容易，而且可以使用很多种方法来实现。   </p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span></span></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">self</span>.<span class="title">bar</span></span></div><div class="line">    <span class="string">"wowowo"</span></div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span></span></div><div class="line">  <span class="class"><span class="keyword">class</span> &lt;&lt; self</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">bar</span></span></div><div class="line">      <span class="string">"wowowo"</span></div><div class="line">    <span class="keyword">end</span></div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">Dog</span>.<span class="title">bar</span></span></div><div class="line">  <span class="string">"wowowo"</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> &lt;&lt; Dog</span></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">bar</span></span></div><div class="line">    <span class="string">"wowowo"</span></div><div class="line">  <span class="keyword">end</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
-<p>上面的定义代码使得 Dog 类都可以用 <code>Dog.bar</code> 来输出”wowowo”。<br>对类来说，可以使用 <code>class_eval</code> 来打开自己来操作类自己。<br>对对象和类来说，可以使用 <code>instance_eval</code>来打开自己的 eigenclass 来操作自己。<br>其实自己再画一个继承图就很好理解了。<br><img src="https://ruby-china-files.b0.upaiyun.com/photo/2015/812ac64bfcaa3869dd842d8e929f66f9.png" alt=""></p>
+<pre><code class="ruby">class Dog
+  def self.bar
+    &quot;wowowo&quot;
+  end
+end
+</code></pre>
+<pre><code class="ruby">class Dog
+  class &lt;&lt; self
+    def bar
+      &quot;wowowo&quot;
+    end
+  end
+end
+</code></pre>
+<pre><code class="ruby">def Dog.bar
+  &quot;wowowo&quot;
+end
+</code></pre>
+<pre><code class="ruby">class &lt;&lt; Dog
+  def bar
+    &quot;wowowo&quot;
+  end
+end
+</code></pre>
+<p>上面的定义代码使得 Dog 类都可以用 <code>Dog.bar</code> 来输出”wowowo”。<br>对类来说，可以使用 <code>class_eval</code> 来打开自己来操作类自己。<br>对对象和类来说，可以使用 <code>instance_eval</code>来打开自己的 eigenclass 来操作自己。<br>其实自己再画一个继承图就很好理解了。<br><img src="https://ruby-china-files.b0.upaiyun.com/photo/2015/812ac64bfcaa3869dd842d8e929f66f9.png"></p>
 <p>其实还有一个 nil 我还没有画，而 nil 的 class 是 NilClass。当定义一个 Dog，和实例一个对象 tidy 就成这样的图了。<br>这个只是局部的显示出 eigenclass 视图。有人做出了一个不包含 eigenclass 的 Ruby 常用类的关系图，真心跪了。  </p>
-<p><img src="https://ruby-china-files.b0.upaiyun.com/photo/2015/39957ccd0f08204244a385a4134ff87c.jpg" alt="">  </p>
+<p><img src="https://ruby-china-files.b0.upaiyun.com/photo/2015/39957ccd0f08204244a385a4134ff87c.jpg">  </p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>想要精通 Ruby，完全熟悉 Ruby 的对象和类模型是不可缺失的一步。</p>
 <h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
-<li><p><a href="http://skilldrick.co.uk/2011/08/understanding-the-ruby-object-model/" target="_blank" rel="external">Understanding the Ruby object model</a>    </p>
+<li><p><a target="_blank" rel="noopener" href="http://skilldrick.co.uk/2011/08/understanding-the-ruby-object-model/">Understanding the Ruby object model</a>    </p>
 </li>
-<li><p><a href="http://skilldrick.co.uk/2010/11/why-classes-are-confusing-in-ruby/" target="_blank" rel="external">Why classes are confusing in Ruby</a>    </p>
+<li><p><a target="_blank" rel="noopener" href="http://skilldrick.co.uk/2010/11/why-classes-are-confusing-in-ruby/">Why classes are confusing in Ruby</a>    </p>
 </li>
-<li><p><a href="http://skilldrick.co.uk/2010/11/something-confusing-about-ruby-object-and-class/" target="_blank" rel="external">Something confusing about Ruby: Object and Class</a>  </p>
+<li><p><a target="_blank" rel="noopener" href="http://skilldrick.co.uk/2010/11/something-confusing-about-ruby-object-and-class/">Something confusing about Ruby: Object and Class</a>  </p>
 </li>
-<li><p><a href="http://madebydna.com/all/code/2011/06/24/eigenclasses-demystified.html" target="_blank" rel="external">Ruby’s Eigenclasses Demystified</a></p>
+<li><p><a target="_blank" rel="noopener" href="http://madebydna.com/all/code/2011/06/24/eigenclasses-demystified.html">Ruby’s Eigenclasses Demystified</a></p>
 </li>
-<li><p><a href="http://book.douban.com/subject/7056800/" target="_blank" rel="external">Ruby元编程</a></p>
+<li><p><a target="_blank" rel="noopener" href="http://book.douban.com/subject/7056800/">Ruby元编程</a></p>
 </li>
-<li><p><a href="http://stackoverflow.com/questions/7682092/ruby-object-model-class-modules-diagram-anywhere" target="_blank" rel="external">stackoverflow</a></p>
+<li><p><a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/7682092/ruby-object-model-class-modules-diagram-anywhere">stackoverflow</a></p>
 </li>
 </ul>
 
@@ -317,7 +366,7 @@
 
 </div>
 
-    <a data-url="http://ftandy.com/2015/04/21/2015-04-21-ruby/" data-id="clo1n69h90007oasnw4w2h858" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://ftandy.com/2015/04/21/2015-04-21-ruby/" data-id="clo1nvt5000099asn92ro7tu5" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding

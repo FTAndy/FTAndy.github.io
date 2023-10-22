@@ -259,9 +259,10 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <p>斯坦福的编译课程中的需要做出来的语言，<a href="https://spark-university.s3.amazonaws.com/stanford-compilers/resources%2Fcool_manual.pdf" target="_blank" rel="external">完整介绍地址</a>。因为在这个课程中需要把这个语言完成做出来，所以熟悉好这门语言和各种细节是很有必要的。</p>
-<p>由于 Virtual Box 的 GUI 看得不爽，找了一下发现了<a href="https://github.com/dlackty/vagrant-cool" target="_blank" rel="external">这个</a>。顺着路子找发现了<a href="https://lagunita.stanford.edu/courses/Engineering/Compilers/Fall2014/6b750292e90d4950b895f621a5671b49/" target="_blank" rel="external">这个</a>，原来可以在本地上安装好课程环境。我就用 Vagrant 了。</p>
-<a id="more"></a>
+            <p>斯坦福的编译课程中的需要做出来的语言，<a target="_blank" rel="noopener" href="https://spark-university.s3.amazonaws.com/stanford-compilers/resources%2Fcool_manual.pdf">完整介绍地址</a>。因为在这个课程中需要把这个语言完成做出来，所以熟悉好这门语言和各种细节是很有必要的。</p>
+<p>由于 Virtual Box 的 GUI 看得不爽，找了一下发现了<a target="_blank" rel="noopener" href="https://github.com/dlackty/vagrant-cool">这个</a>。顺着路子找发现了<a target="_blank" rel="noopener" href="https://lagunita.stanford.edu/courses/Engineering/Compilers/Fall2014/6b750292e90d4950b895f621a5671b49/">这个</a>，原来可以在本地上安装好课程环境。我就用 Vagrant 了。</p>
+<span id="more"></span>
+
 <h3 id="Cool语言介绍"><a href="#Cool语言介绍" class="headerlink" title="Cool语言介绍"></a>Cool语言介绍</h3><p>特性关键字：  </p>
 <ol>
 <li>object-oriented   </li>
@@ -269,54 +270,121 @@
 <li>automatic memory management  </li>
 <li>expression  </li>
 </ol>
-<p>Cool语言基于 <a href="http://baike.baidu.com/link?url=bohPeNDUZwmg-Spb-gWGrLaN8rAUI0O-QSZTl1-ive7Qd57Bl5zpTEVMZKmptN_9qGtbq1RZA7EfmAWaJ-EpNq" target="_blank" rel="external">MIPS处理器</a> 处理。<br>本课程中用使用了一种 MIPS 处理器的模拟器 spim。课程上的那个 spim 是 misp 的变种，可以直接运行 cool 语言编译出来的可执行文件。  </p>
+<p>Cool语言基于 <a target="_blank" rel="noopener" href="http://baike.baidu.com/link?url=bohPeNDUZwmg-Spb-gWGrLaN8rAUI0O-QSZTl1-ive7Qd57Bl5zpTEVMZKmptN_9qGtbq1RZA7EfmAWaJ-EpNq">MIPS处理器</a> 处理。<br>本课程中用使用了一种 MIPS 处理器的模拟器 spim。课程上的那个 spim 是 misp 的变种，可以直接运行 cool 语言编译出来的可执行文件。  </p>
 <p>编译和执行过程就是：  </p>
 <p>cool 源码—–&gt; spim 的可执行文件—–&gt; spim 翻译成机器指令—–&gt;执行</p>
 <p>编译命令：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">coolc</span> <span class="selector-tag">file1</span><span class="selector-class">.cl</span></div></pre></td></tr></table></figure>
+<pre><code>coolc file1.cl
+</code></pre>
 <p>生成目标可执行文件<code>file1.s</code>  </p>
 <p>用 spim 虚拟机执行命令：    </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ spim <span class="comment">#进入模拟环境</span></div><div class="line">(spim) load <span class="string">"file1.s"</span> <span class="comment">#模拟环境操作</span></div><div class="line">(spim) run</div><div class="line">(spim) reinit <span class="comment">#清内存，重新加载环境</span></div><div class="line"></div><div class="line">$ spim -file file.s <span class="comment">#也可以直接执行</span></div></pre></td></tr></table></figure>
+<pre><code class="bash">$ spim #进入模拟环境
+(spim) load &quot;file1.s&quot; #模拟环境操作
+(spim) run
+(spim) reinit #清内存，重新加载环境
+
+$ spim -file file.s #也可以直接执行
+</code></pre>
 <h3 id="类"><a href="#类" class="headerlink" title="类"></a>类</h3><p>源文件必须有一个定义好 <code>main</code> 方法的 <code>Main</code> 类，每个源文件可以有多个类。所有类对外可见。类名称必须大写。类不可重写。  </p>
-<h3 id="类内部声明"><a href="#类内部声明" class="headerlink" title="类内部声明"></a>类内部声明</h3><figure class="highlight zephir"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Cons</span> <span class="title">inherits</span> <span class="title">List</span>  </span>&#123;</div><div class="line">  xcar : <span class="keyword">Int</span>; <span class="comment">#属性</span></div><div class="line">  xcdr : <span class="keyword">List</span>; <span class="comment">#属性</span></div><div class="line"></div><div class="line">  isNil() : <span class="keyword">Bool</span> &#123; <span class="keyword">false</span> &#125;; <span class="comment">#方法</span></div><div class="line"></div><div class="line">  init(hd : <span class="keyword">Int</span>, tl : <span class="keyword">List</span>) : Cons &#123; <span class="comment">#构造方法</span></div><div class="line">    &#123;</div><div class="line">      xcar &lt;- hd;</div><div class="line">      xcdr &lt;- tl;</div><div class="line">      <span class="keyword">self</span>;</div><div class="line">    &#125;</div><div class="line">  &#125;;</div><div class="line"></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h3 id="类内部声明"><a href="#类内部声明" class="headerlink" title="类内部声明"></a>类内部声明</h3><pre><code>class Cons inherits List  &#123;
+  xcar : Int; #属性
+  xcdr : List; #属性
+
+  isNil() : Bool &#123; false &#125;; #方法
+
+  init(hd : Int, tl : List) : Cons &#123; #构造方法
+    &#123;
+      xcar &lt;- hd;
+      xcdr &lt;- tl;
+      self;
+    &#125;
+  &#125;;
+
+&#125;;
+</code></pre>
 <p>内部声明只有两种类型：属性和方法，都不可重复定义，首字母都必须小写。方法的最后一行语句为该方法返回值，用 return 可中途返回。赋值符号用<code>-&gt;</code>而不是<code>=</code> 。类构造方法为 <code>init()</code> 。没有析构方法，因为用的是自动垃圾回收机制 GC。  </p>
-<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> <span class="title">inherits</span> <span class="title">P</span> &#123; ... &#125;;</span></div></pre></td></tr></table></figure>
+<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><pre><code>class C inherits P &#123; ... &#125;;
+</code></pre>
 <p>采用单继承。C继承自P，C享有P所有属性和方法。声明类不使用继承的话，默认继承自Object。Object是最终类，Int, String, Bool, and IO是基类。</p>
 <h3 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h3><p>所有声明的类名都变成类型。所有变量和参数都需要声明类型。假如C继承自P，那么P声明的变量也可用C来代替。使用 SELF_TYPE 可以返回自身的类类型。编译运行时必须保证所有变量和返回都有类型，保证运行时不会有类型错误发生，这是静态检查，所以 Cool 是静态类型语言。</p>
-<h3 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h3><figure class="highlight bnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">&lt;id&gt;</span> : <span class="attribute">&lt;type&gt;</span> [ <span class="attribute">&lt;- &lt;expr&gt;</span> ];</div></pre></td></tr></table></figure>
+<h3 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h3><pre><code>&lt;id&gt; : &lt;type&gt; [ &lt;- &lt;expr&gt; ];
+</code></pre>
 <p>后面执行语句是可选的，假如没有在声明时指定值，默认值为 void。void 没有值，可以用 <code>isvoid</code> 方法判断是否为 void。</p>
-<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">id</span>&gt;</span>(<span class="tag">&lt;<span class="name">id</span>&gt;</span> : <span class="tag">&lt;<span class="name">type</span>&gt;</span>,...,<span class="tag">&lt;<span class="name">id</span>&gt;</span> : <span class="tag">&lt;<span class="name">type</span>&gt;</span>): <span class="tag">&lt;<span class="name">type</span>&gt;</span> &#123; <span class="tag">&lt;<span class="name">expr</span>&gt;</span> &#125;;</div></pre></td></tr></table></figure>
+<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><pre><code>&lt;id&gt;(&lt;id&gt; : &lt;type&gt;,...,&lt;id&gt; : &lt;type&gt;): &lt;type&gt; &#123; &lt;expr&gt; &#125;;
+</code></pre>
 <p>参数和返回值要声明好返回类型。继承的子类可以重载方法。</p>
 <h3 id="表达式语句"><a href="#表达式语句" class="headerlink" title="表达式语句"></a>表达式语句</h3><h3 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h3><p>布尔类型常量 true, false。整型类型常量以存数字出现。字符串常量以 “xxxxx” 出现，最大为1024个字。三种常量基于类 Bool，Integer，String。</p>
 <h3 id="标示符"><a href="#标示符" class="headerlink" title="标示符"></a>标示符</h3><p>包括本地变量，方法参数，self，类属性。self 不能以赋值形式出现。</p>
-<h3 id="赋值"><a href="#赋值" class="headerlink" title="赋值"></a>赋值</h3><figure class="highlight apache"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="section">&lt;id&gt;</span> <span class="section">&lt;- &lt;expr&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="赋值"><a href="#赋值" class="headerlink" title="赋值"></a>赋值</h3><pre><code>&lt;id&gt; &lt;- &lt;expr&gt;
+</code></pre>
 <p>可以出现声明式赋值，也可以隐式赋值，类型为值类型。</p>
-<h3 id="方法调用"><a href="#方法调用" class="headerlink" title="方法调用"></a>方法调用</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">expr</span>&gt;</span>.<span class="tag">&lt;<span class="name">id</span>&gt;</span>(<span class="tag">&lt;<span class="name">expr</span>&gt;</span>,...,<span class="tag">&lt;<span class="name">expr</span>&gt;</span>)</div><div class="line"><span class="tag">&lt;<span class="name">id</span>&gt;</span>(<span class="tag">&lt;<span class="name">expr</span>&gt;</span>,...,<span class="tag">&lt;<span class="name">expr</span>&gt;</span>) #相当于self.<span class="tag">&lt;<span class="name">id</span>&gt;</span>(<span class="tag">&lt;<span class="name">expr</span>&gt;</span>,...,<span class="tag">&lt;<span class="name">expr</span>&gt;</span>)</div><div class="line"><span class="tag">&lt;<span class="name">expr</span>&gt;</span>@<span class="tag">&lt;<span class="name">type</span>&gt;</span>.id(<span class="tag">&lt;<span class="name">expr</span>&gt;</span>,...,<span class="tag">&lt;<span class="name">expr</span>&gt;</span>)</div></pre></td></tr></table></figure>
-<h3 id="条件判断"><a href="#条件判断" class="headerlink" title="条件判断"></a>条件判断</h3><p>判断的条件类型必须为 Bool 型。<br><figure class="highlight gauss"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> &lt;<span class="keyword">expr</span>&gt; then &lt;<span class="keyword">expr</span>&gt; <span class="keyword">else</span> &lt;<span class="keyword">expr</span>&gt; fi</div></pre></td></tr></table></figure></p>
-<h3 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h3><p>同样，判断的条件类型必须为Bool型。<br><figure class="highlight gauss"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> &lt;<span class="keyword">expr</span>&gt; loop &lt;<span class="keyword">expr</span>&gt; pool</div></pre></td></tr></table></figure></p>
-<h3 id="块"><a href="#块" class="headerlink" title="块"></a>块</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123; <span class="tag">&lt;<span class="name">expr</span>&gt;</span>; ... <span class="tag">&lt;<span class="name">expr</span>&gt;</span>; &#125;</div></pre></td></tr></table></figure>
+<h3 id="方法调用"><a href="#方法调用" class="headerlink" title="方法调用"></a>方法调用</h3><pre><code>&lt;expr&gt;.&lt;id&gt;(&lt;expr&gt;,...,&lt;expr&gt;)
+&lt;id&gt;(&lt;expr&gt;,...,&lt;expr&gt;) #相当于self.&lt;id&gt;(&lt;expr&gt;,...,&lt;expr&gt;)
+&lt;expr&gt;@&lt;type&gt;.id(&lt;expr&gt;,...,&lt;expr&gt;)
+</code></pre>
+<h3 id="条件判断"><a href="#条件判断" class="headerlink" title="条件判断"></a>条件判断</h3><p>判断的条件类型必须为 Bool 型。</p>
+<pre><code>if &lt;expr&gt; then &lt;expr&gt; else &lt;expr&gt; fi
+</code></pre>
+<h3 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h3><p>同样，判断的条件类型必须为Bool型。</p>
+<pre><code>while &lt;expr&gt; loop &lt;expr&gt; pool
+</code></pre>
+<h3 id="块"><a href="#块" class="headerlink" title="块"></a>块</h3><pre><code>&#123; &lt;expr&gt;; ... &lt;expr&gt;; &#125;
+</code></pre>
 <p>块后面可以不加;号，返回值为最后的语句的值。</p>
-<h3 id="let赋值"><a href="#let赋值" class="headerlink" title="let赋值"></a>let赋值</h3><figure class="highlight pf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">let <span class="variable">&lt;id1&gt;</span> : <span class="variable">&lt;type1&gt;</span> [ <span class="variable">&lt;- &lt;expr1&gt;</span> ], ..., <span class="variable">&lt;idn&gt;</span> : <span class="variable">&lt;typen&gt;</span> [ <span class="variable">&lt;- &lt;exprn&gt;</span> ] <span class="keyword">in</span> <span class="variable">&lt;expr&gt;</span></div></pre></td></tr></table></figure>
-<h3 id="case"><a href="#case" class="headerlink" title="case"></a>case</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">case <span class="tag">&lt;<span class="name">expr0</span>&gt;</span> of</div><div class="line"><span class="tag">&lt;<span class="name">id1</span>&gt;</span> : <span class="tag">&lt;<span class="name">type1</span>&gt;</span> =&gt; <span class="tag">&lt;<span class="name">expr1</span>&gt;</span>;</div><div class="line">. . .</div><div class="line"><span class="tag">&lt;<span class="name">idn</span>&gt;</span> : <span class="tag">&lt;<span class="name">typen</span>&gt;</span> =&gt; <span class="tag">&lt;<span class="name">exprn</span>&gt;</span>;</div><div class="line">esac</div></pre></td></tr></table></figure>
-<h3 id="new-创建对象"><a href="#new-创建对象" class="headerlink" title="new 创建对象"></a>new 创建对象</h3><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> &lt;<span class="class"><span class="keyword">type</span>&gt;</span></div></pre></td></tr></table></figure>
-<h3 id="Isvoid"><a href="#Isvoid" class="headerlink" title="Isvoid"></a>Isvoid</h3><p>判断是否为 void<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">isvoid expr</span></div></pre></td></tr></table></figure></p>
-<h3 id="算术符号"><a href="#算术符号" class="headerlink" title="算术符号"></a>算术符号</h3><p>四种基本的算术符号：<code>+ - * /</code>。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">expr1 <span class="tag">&lt;<span class="name">op</span>&gt;</span> expr2</div></pre></td></tr></table></figure></p>
+<h3 id="let赋值"><a href="#let赋值" class="headerlink" title="let赋值"></a>let赋值</h3><pre><code>let &lt;id1&gt; : &lt;type1&gt; [ &lt;- &lt;expr1&gt; ], ..., &lt;idn&gt; : &lt;typen&gt; [ &lt;- &lt;exprn&gt; ] in &lt;expr&gt;
+</code></pre>
+<h3 id="case"><a href="#case" class="headerlink" title="case"></a>case</h3><pre><code>case &lt;expr0&gt; of
+&lt;id1&gt; : &lt;type1&gt; =&gt; &lt;expr1&gt;;
+. . .
+&lt;idn&gt; : &lt;typen&gt; =&gt; &lt;exprn&gt;;
+esac
+</code></pre>
+<h3 id="new-创建对象"><a href="#new-创建对象" class="headerlink" title="new 创建对象"></a>new 创建对象</h3><pre><code>new &lt;type&gt;
+</code></pre>
+<h3 id="Isvoid"><a href="#Isvoid" class="headerlink" title="Isvoid"></a>Isvoid</h3><p>判断是否为 void</p>
+<pre><code>isvoid expr
+</code></pre>
+<h3 id="算术符号"><a href="#算术符号" class="headerlink" title="算术符号"></a>算术符号</h3><p>四种基本的算术符号：<code>+ - * /</code>。</p>
+<pre><code>expr1 &lt;op&gt; expr2
+</code></pre>
 <p>左右表达式的类型必须为 Integer，Cool 中只有整形算术。<br>比较类型<code>&lt; &lt;= &gt;</code>。<code>&lt; &lt;=</code>可以比较同类型的表达式，返回为 true 或 false。<code>=</code>比较地址是否相同，值相同为 false。</p>
-<h3 id="基本类"><a href="#基本类" class="headerlink" title="基本类"></a>基本类</h3><h3 id="Object"><a href="#Object" class="headerlink" title="Object"></a>Object</h3><p>Object 是所有继承链的最终类。<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="title">abort</span><span class="params">()</span></span> : Object</div><div class="line"><span class="function"><span class="title">type_name</span><span class="params">()</span></span> : String</div><div class="line"><span class="function"><span class="title">copy</span><span class="params">()</span></span> : SELF_TYPE</div></pre></td></tr></table></figure></p>
+<h3 id="基本类"><a href="#基本类" class="headerlink" title="基本类"></a>基本类</h3><h3 id="Object"><a href="#Object" class="headerlink" title="Object"></a>Object</h3><p>Object 是所有继承链的最终类。</p>
+<pre><code>abort() : Object
+type_name() : String
+copy() : SELF_TYPE
+</code></pre>
 <p>提供三个方法，abort() 会抛出错误，type_name() 会返回当前对象的类型名，copy() 会返回当前对象的一个副本，但是只是一个复制，不是指针，也不是引用。</p>
-<h3 id="IO"><a href="#IO" class="headerlink" title="IO"></a>IO</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="title">out_string</span><span class="params">(x : String)</span></span> : SELF_TYPE</div><div class="line"><span class="function"><span class="title">out_int</span><span class="params">(x : Int)</span></span> : SELF_TYPE</div><div class="line"><span class="function"><span class="title">in_string</span><span class="params">()</span></span> : String</div><div class="line"><span class="function"><span class="title">in_int</span><span class="params">()</span></span> : Int</div></pre></td></tr></table></figure>
+<h3 id="IO"><a href="#IO" class="headerlink" title="IO"></a>IO</h3><pre><code>out_string(x : String) : SELF_TYPE
+out_int(x : Int) : SELF_TYPE
+in_string() : String
+in_int() : Int
+</code></pre>
 <p>out_string 和 out_int 对应打印出 String, Integer，返回 IO 类型。in_string, in_int对应输入 String, Integer。</p>
 <h3 id="Int"><a href="#Int" class="headerlink" title="Int"></a>Int</h3><p>只提供类型和值，初始化默认值为0。不能从 Int 类继承。</p>
-<h3 id="String"><a href="#String" class="headerlink" title="String"></a>String</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="title">length</span><span class="params">()</span></span> : Int</div><div class="line"><span class="function"><span class="title">concat</span><span class="params">(s : String)</span></span> : String</div><div class="line"><span class="function"><span class="title">substr</span><span class="params">(i : Int, l : Int)</span></span> : String</div></pre></td></tr></table></figure>
+<h3 id="String"><a href="#String" class="headerlink" title="String"></a>String</h3><pre><code>length() : Int
+concat(s : String) : String
+substr(i : Int, l : Int) : String
+</code></pre>
 <p>初始化默认值为””。不能从 String 中继承。</p>
 <h3 id="Bool"><a href="#Bool" class="headerlink" title="Bool"></a>Bool</h3><p>只提供类型和值，初始化默认值为 false。不能从 Bool 类中继承。</p>
 <h3 id="Main"><a href="#Main" class="headerlink" title="Main"></a>Main</h3><p>每个源文件必须有一个Main类，类中必须有一个main方法。执行程序从main方法开始。</p>
 <h3 id="词法结构"><a href="#词法结构" class="headerlink" title="词法结构"></a>词法结构</h3><h3 id="Integers-Identifiers-and-Special-Notation"><a href="#Integers-Identifiers-and-Special-Notation" class="headerlink" title="Integers, Identifiers, and Special Notation"></a>Integers, Identifiers, and Special Notation</h3><p>整数为0~9的数，标识符由字母，数字，底线符号组成，类型名第一个字母为大写，对象第一个字母为字符。keyword 不能作为声明类型</p>
 <h3 id="String-1"><a href="#String-1" class="headerlink" title="String"></a>String</h3><p>“\x”翻译成”x”，EOF 不能包含在字符串里</p>
-<figure class="highlight livescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="string">\b</span> backspace</div><div class="line"><span class="string">\t</span> tab</div><div class="line"><span class="string">\n</span> newline</div><div class="line"><span class="string">\f</span> formfeed</div></pre></td></tr></table></figure>
+<pre><code>\b backspace
+\t tab
+\n newline
+\f formfeed
+</code></pre>
 <h3 id="Comments"><a href="#Comments" class="headerlink" title="Comments"></a>Comments</h3><p>两个<code>--</code>之间的语句，<code>(*...*)</code>中间。</p>
-<h3 id="KeyWords"><a href="#KeyWords" class="headerlink" title="KeyWords"></a>KeyWords</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span>, <span class="type">else</span>, <span class="type">false</span>, <span class="type">fi</span>, <span class="type">if</span>, <span class="type">in</span>, <span class="type">inherits</span>, <span class="type">isvoid</span>, <span class="type">let</span>, <span class="type">loop</span>, <span class="type">pool</span>, <span class="type">then</span>, <span class="type">while</span>,<span class="type">case</span>, <span class="type">esac</span>, <span class="type">new</span>, <span class="type">of</span>, <span class="type">not</span>, <span class="type">true</span></span></div></pre></td></tr></table></figure>
-<h3 id="White-Space"><a href="#White-Space" class="headerlink" title="White Space"></a>White Space</h3><figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">blank (<span class="built_in">ascii</span> <span class="number">32</span>), </div><div class="line">\n (<span class="built_in">newline</span>, <span class="built_in">ascii</span> <span class="number">10</span>),</div><div class="line">\f (form feed, <span class="built_in">ascii</span> <span class="number">12</span>),</div><div class="line">\r (carriage <span class="built_in">return</span>, <span class="built_in">ascii</span> <span class="number">13</span>),</div><div class="line">\t (<span class="built_in">tab</span>, <span class="built_in">ascii</span> <span class="number">9</span>),</div><div class="line">\v (vertical <span class="built_in">tab</span>, <span class="built_in">ascii</span> <span class="number">11</span>) d</div></pre></td></tr></table></figure>
+<h3 id="KeyWords"><a href="#KeyWords" class="headerlink" title="KeyWords"></a>KeyWords</h3><pre><code>class, else, false, fi, if, in, inherits, isvoid, let, loop, pool, then, while,case, esac, new, of, not, true
+</code></pre>
+<h3 id="White-Space"><a href="#White-Space" class="headerlink" title="White Space"></a>White Space</h3><pre><code>blank (ascii 32), 
+\n (newline, ascii 10),
+\f (form feed, ascii 12),
+\r (carriage return, ascii 13),
+\t (tab, ascii 9),
+\v (vertical tab, ascii 11) d
+</code></pre>
 
         
         </div>
@@ -327,7 +395,7 @@
 
 </div>
 
-    <a data-url="http://ftandy.com/2015/06/11/2015-06-11-cool-language/" data-id="clo1n69he000foasnnhonmcl7" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://ftandy.com/2015/06/11/2015-06-11-cool-language/" data-id="clo1nvt5f000s9asnbo271clo" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
